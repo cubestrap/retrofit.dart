@@ -2239,9 +2239,15 @@ if (T != dynamic &&
           case retrofit.Parser.DartJsonMapper:
             value = refer(p.displayName);
           case retrofit.Parser.DartMappable:
-            value = p.type.nullabilitySuffix == NullabilitySuffix.question
-                ? refer(p.displayName).nullSafeProperty('toMap').call([])
-                : refer(p.displayName).property('toMap').call([]);
+            if (_isEnum(p.type)) {
+              value = p.type.nullabilitySuffix == NullabilitySuffix.question
+                  ? refer(p.displayName).nullSafeProperty('toValue').call([])
+                  : refer(p.displayName).property('toValue').call([]);
+            } else {
+              value = p.type.nullabilitySuffix == NullabilitySuffix.question
+                  ? refer(p.displayName).nullSafeProperty('toMap').call([])
+                  : refer(p.displayName).property('toMap').call([]);
+            }
           case retrofit.Parser.FlutterCompute:
             value = refer(
               'await compute(serialize${_displayString(p.type)}, ${p.displayName})',
