@@ -2244,9 +2244,17 @@ if (T != dynamic &&
                   ? refer(p.displayName).nullSafeProperty('toValue').call([])
                   : refer(p.displayName).property('toValue').call([]);
             } else {
-              value = p.type.nullabilitySuffix == NullabilitySuffix.question
-                  ? refer(p.displayName).nullSafeProperty('toMap').call([])
-                  : refer(p.displayName).property('toMap').call([]);
+              if (_isExactly(DateTime, p.type)) {
+                value = p.type.nullabilitySuffix == NullabilitySuffix.question
+                    ? refer(
+                        p.displayName,
+                      ).nullSafeProperty('toIso8601String').call([])
+                    : refer(p.displayName).property('toIso8601String').call([]);
+              } else {
+                value = p.type.nullabilitySuffix == NullabilitySuffix.question
+                    ? refer(p.displayName).nullSafeProperty('toMap').call([])
+                    : refer(p.displayName).property('toMap').call([]);
+              }
             }
           case retrofit.Parser.FlutterCompute:
             value = refer(
